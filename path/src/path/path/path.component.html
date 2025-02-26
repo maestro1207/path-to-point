@@ -1,0 +1,50 @@
+<div class="pirate-map-container">
+  <div class="map-background">
+    <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path #highlightPath fill="transparent"></path>
+      <path
+        #mainPath
+        [attr.d]="generateCurvedPathInternal()"
+        stroke="none"
+        stroke-width="0.1"
+        fill="transparent"
+      ></path>
+    </svg>
+    <div class="runner" #runnerEl>
+      <mat-icon>accessibility_new</mat-icon>
+    </div>
+    <div
+      class="map-marker"
+      *ngFor="let step of steps; let i = index"
+      [style.top.%]="step.top"
+      [style.left.%]="step.left"
+    >
+      <ng-container *ngIf="i === 0 || visitedSteps.includes(i)">
+        <ng-container *ngIf="step.final; else normalMarker">
+          <div class="marker-icon final">
+            <mat-icon>star</mat-icon>
+          </div>
+        </ng-container>
+        <ng-template #normalMarker>
+          <div class="marker-icon">
+            <ng-container *ngIf="visitedSteps.includes(i) && activeStepIndex !== i; else defaultIcon">
+              <mat-icon>check</mat-icon>
+            </ng-container>
+            <ng-template #defaultIcon>
+              <mat-icon>place</mat-icon>
+            </ng-template>
+          </div>
+        </ng-template>
+      </ng-container>
+
+      <mat-card class="info-card" *ngIf="isCardVisible(i)">
+        <mat-card-title>
+          {{ step.title ? step.title : ('Krok ' + (i + 1)) }}
+        </mat-card-title>
+        <mat-card-content>
+          <p>{{ step.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
